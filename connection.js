@@ -1,4 +1,4 @@
-const mysql = require('mysql');
+const mysql = require('mysql2');
 // buat konfigurasi koneksi
 const koneksi = mysql.createConnection({
     host: 'localhost', //127.0.0.1
