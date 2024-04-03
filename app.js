@@ -6,7 +6,18 @@ const PORT = process.env.PORT || 5000;
 // set body parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+const datas = [
+    {
+      nama: "Jonathan Purba",
+      asal: "Jakarta",
+    },
+  ];
 
+  app.get("/", (req, res) => {
+    const { nama, asal } = datas[0]; 
+    res.status(200).json({ nama, asal });
+  });
+  
 // create data / insert data
 app.post('/api/bootcamp', (req, res) => {
     const data = { ...req.body };
