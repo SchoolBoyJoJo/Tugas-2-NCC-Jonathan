@@ -9,21 +9,26 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // create data / insert data
 app.post('/api/bootcamp', (req, res) => {
-    // buat variabel penampung data dan query sql
     const data = { ...req.body };
     const querySql = 'INSERT INTO bootcamp SET ?';
 
-    // jalankan query
+    // Validasi: Pastikan semua field terisi sebelum melakukan insert
+    const requiredFields = ['name', 'description', 'website', 'phone', 'email', 'address'];
+    const missingFields = requiredFields.filter(field => !data[field]);
+
+    if (missingFields.length > 0) {
+        return res.status(400).json({ message: 'Semua field harus diisi!', missingFields, success: false });
+    }
+
     koneksi.query(querySql, data, (err, rows, field) => {
-        // error handling
         if (err) {
             return res.status(500).json({ message: 'Gagal insert data!', error: err });
         }
 
-        // jika request berhasil
         res.status(201).json({ success: true, message: 'Berhasil insert data!' });
     });
 });
+
 
 // read data / get data
 app.get('/api/bootcamp/:id', (req, res) => {
@@ -41,7 +46,7 @@ app.get('/api/bootcamp/:id', (req, res) => {
 
         // Jika request berhasil
         if (rows.length === 0) {
-            return res.status(404).json({ message: 'Data tidak ditemukan' });
+            return res.status(404).json({ message: 'Data tidak ditemukan!', success: false });
         }
 
         res.status(200).json({ success: true, data: rows[0] });
